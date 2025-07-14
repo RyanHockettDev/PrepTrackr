@@ -12,14 +12,27 @@ function JobFormModal({ show, onClose, onSubmit, job }) {
     location: '',
     salaryFloor: '',
     salaryCeiling: '',
-    contactName: '',
-    contactInfo: '',
   });
 
   // Load existing job into form (update mode) only re-renders on update to job prop
   useEffect(() => {
-    if (job) setForm(job);
-  }, [job]);
+  if (job) {
+    setForm(job); // Edit mode
+  } else {
+    // Add mode: clear the form
+    setForm({
+      company: '',
+      role: '',
+      source: '',
+      dateApplied: '',
+      status: 'Applied',
+      notes: '',
+      location: '',
+      salaryFloor: '',
+      salaryCeiling: '',
+    });
+  }
+}, [job]);
 
   //update form field values for submission when they change
   const handleChange = (e) => {
@@ -28,6 +41,23 @@ function JobFormModal({ show, onClose, onSubmit, job }) {
 
   //submission of form - current timestamp for updated at, but checks for previous createdAt value
   const handleSubmit = () => {
+    if (!job) {
+        setForm({
+            company: '',
+            role: '',
+            source: '',
+            dateApplied: '',
+            status: 'Applied',
+            notes: '',
+            location: '',
+            salaryFloor: '',
+            salaryCeiling: '',
+        });
+    }
+    if (!form.company || !form.dateApplied || !form.role || !form.source) {
+        alert('Company, Role, Source, and Application Date are required to create a new job app');
+        return;
+    } else {
     const timestamp = new Date().toISOString();
     const newJob = {
       ...form,
@@ -37,7 +67,7 @@ function JobFormModal({ show, onClose, onSubmit, job }) {
     };
     onSubmit(newJob);
     onClose();
-  };
+  }};
 
   return (
     <Modal show={show} onHide={onClose}>
@@ -111,7 +141,7 @@ function JobFormModal({ show, onClose, onSubmit, job }) {
             />
           </Form.Group>
           <Form.Group className="mb-2">
-            <Form.Label>Locaiton</Form.Label>
+            <Form.Label>Location</Form.Label>
             <Form.Control
               name="location"
               value={form.location}
@@ -131,23 +161,6 @@ function JobFormModal({ show, onClose, onSubmit, job }) {
             <Form.Control
               name="salaryCeiling"
               value={form.salaryCeiling}
-              onChange={handleChange}
-            />
-          </Form.Group>
-          <Form.Group className="mb-2">
-            <Form.Label>Company Contact Name</Form.Label>
-            <Form.Control
-              name="contactName"
-              value={form.contactName}
-              onChange={handleChange}
-            />
-          </Form.Group>
-          <Form.Group className="mb-2">
-            <Form.Label>Contact Info</Form.Label>
-            <Form.Control
-              placeholder='Email, phone, etc..'
-              name="contactInfo"
-              value={form.contactInfo}
               onChange={handleChange}
             />
           </Form.Group>

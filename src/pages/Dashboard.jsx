@@ -1,19 +1,103 @@
-import React from 'react';
-import { Container, Row, Col, Card, Button, Navbar, Nav, ListGroup } from 'react-bootstrap';
-import JobCard from '../components/JobCard'
-import PrepCard from '../components/PrepCard'
+import { useState } from 'react';
+import { Container, Row, Col, Button, Navbar, Nav, Card } from 'react-bootstrap';
+
+import JobFormModal from '../components/JobFormModal';
+import PrepFormModal from '../components/PrepFormModal';
+import JobCard from '../components/JobCard';
+import PrepCard from '../components/PrepCard';
 
 
 
 
 
 
-function Dashboard({jobs, prepItems}) {
-    const job = jobs.length > 0 ? jobs[0] : null;
-    const prepItem = prepItems.length > 0 ? prepItems[0] : null;
+function Dashboard({}) {
+    //Checking for empty jobs and prepItems state values, then setting variable to first item in array (sorted in app.jsx, or on save) to fill single dashboard cards 
+    const [jobs, setJobs] = useState ([]);
+    const [prepItems, setPrepItems] = useState([]);
+    const recentJob = jobs && jobs.length > 0 ? jobs[0] : null;
+    const recentPrepItem = prepItems.length > 0 ? prepItems[0] : null;
+    
+
+    // Setting state values for toggling the modal popover and selected job (null by default for adding a job, entire job  object if updating a job)
+    const [showJobModal, setShowJobModal] = useState(false);
+    const [selectedJob, setSelectedJob] = useState(null);
+    const [showPrepModal, setShowPrepModal] = useState(false);
+    const [selectedPrepItem, setSelectedPrepItem] = useState(null)
+
+
+    // Handlers for the job modal actions
+    const handleAddJobClick = () => {
+        //clears selected job state value if a job has previously been edited
+        setSelectedJob(null);
+        setShowJobModal(true);
+    }
+
+    const handleEditJobClick = (job) => {
+        setSelectedJob(job);
+        setShowJobModal(true);
+    }
+
+    const handleDeleteJobClick = (job) => {
+        setJobs((prevJobs) => {
+            return prevJobs.filter(j => j.id !== job.id);
+        
+        })
+    }
+    
+    const handleSaveJob = (job) => {
+        setJobs((prevJobs) => {
+            // Filters for all jobs but prop job by id
+            const filtered = prevJobs.filter(j => j.id !== job.id);
+            console.log(jobs)
+            //sort function - jobs list 
+            return [...filtered, job].sort((a,b) => new Date(b.updatedAt) - new Date(a.updatedAt))
+        });
+    };
+
+    const handleCloseJobModal = () => {
+        setShowJobModal(false);
+    }
+
+    // Handles for the prep item modal actions
+
+    const handleAddPrepItemClick = () => {
+        //clears selected PrepItem state value if a PrepItem has previously been edited
+        setSelectedPrepItem(null);
+        setShowPrepModal(true);
+    }
+
+    const handleEditPrepItemClick = (prepItem) => {
+        setSelectedPrepItem(prepItem);
+        setShowPrepModal(true);
+    }
+
+    const handleDeletePrepItemClick = (prepItem) => {
+        setPrepItems((prevPrepItems) => {
+            return prevPrepItems.filter(j => j.id !== prepItem.id);
+        
+        })
+    }
+    
+    const handleSavePrepItem = (prepItem) => {
+        setPrepItems((prevPrepItems) => {
+            // Filters for all PrepItems but prop PrepItem by id
+            const filtered = prevPrepItems.filter(j => j.id !== prepItem.id);
+            console.log(prepItems)
+            //sort function - PrepItems list 
+            return [...filtered, prepItem].sort((a,b) => new Date(b.updatedAt) - new Date(a.updatedAt))
+        });
+        setSelectedPrepItem(null);
+    };
+
+    const handleClosePrepItemModal = () => {
+        setShowPrepModal(false);
+    }
+
+
   return (
     <Container className="mt-4 fullPage">
-      <Navbar expand="lg" className="border-bottom">
+      <Navbar expand="lg" className="border-bottom border-dark">
         <Container>
             <Navbar.Brand href="/" className='brand'>PrepTrackr</Navbar.Brand>
             <Nav>
@@ -29,20 +113,47 @@ function Dashboard({jobs, prepItems}) {
       <Row className='d-flex justify-content-around border-bottom'>
         {/* Latest Job Application */}
         <Col md={4} className="my-4 d-flex flex-column border-bottom">
-        <Button className='my-4 greenBg'>Add New Job App</Button>
+        <Button className='my-4 greenBg' onClick={handleAddJobClick}>Add New Job App</Button>
         <div className='bold my-2 mx-auto'>Most recently updated Job App:</div>
-          {job && <JobCard job={job} />}
+          {recentJob && <JobCard job={recentJob} onEditClick={() => handleEditJobClick(recentJob)} onDeleteClick={() => handleDeleteJobClick(recentJob)}/>}
+          {!recentJob &&
+          <Card className='border-dark'>
+            <Card.Header>No Job Applications Available</Card.Header>
+            <Card.Body>It looks like you haven't added any job applications yet! Use the green button above to add your first job app.</Card.Body>
+            <Card.Footer></Card.Footer>
+          </Card>
+          }
         <Button className='tealBg my-4'>See All Jobs</Button>
         </Col>
 
         {/* Latest Interview Prep */}
         <Col md={4} className="my-4 d-flex flex-column border-bottom">
-        <Button className='my-4 greenBg'>Add New Prep Item</Button>
+        <Button className='my-4 greenBg' onClick={handleAddPrepItemClick}>Add New Interview Prep Item</Button>
         <div className='bold my-2 mx-auto'>Most recently updated Prep Item:</div>
-          {prepItem && <PrepCard prepItem={prepItem} />}
+          {recentPrepItem && <PrepCard prepItem={recentPrepItem} onEditClick={() => handleEditPrepItemClick(recentPrepItem)} 
+          onDeleteClick={() => handleDeletePrepItemClick(recentPrepItem)}/>}
+          {!recentPrepItem &&
+          <Card className='border-dark'>
+            <Card.Header>No Prep Items Available</Card.Header>
+            <Card.Body>It looks like you haven't added any Interview Prep items yet! Use the green button above to add your first prep item.</Card.Body>
+            <Card.Footer></Card.Footer>
+          </Card>
+          }
           <Button className='tealBg my-4'>See All Prep Items</Button>
         </Col>
       </Row>
+      <JobFormModal
+        show={showJobModal}
+        onClose={handleCloseJobModal}
+        onSubmit={handleSaveJob}
+        job={selectedJob}
+      />
+      <PrepFormModal
+        show={showPrepModal}
+        onClose={handleClosePrepItemModal}
+        onSubmit={handleSavePrepItem}
+        prepItem={selectedPrepItem}
+      />
     </Container>
   );
 }
