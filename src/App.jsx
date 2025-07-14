@@ -14,8 +14,7 @@ function App() {
       role: 'Frontend Developer',
       source: 'LinkedIn',
       dateApplied: '2025-07-12',
-      status: 'Rejected',
-      notes: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+      status: 'Applied',
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
   };
@@ -31,16 +30,17 @@ function App() {
   };
   const prep1 = {
     id: 1,
-    type: "concept",
+    type: "Concept",
     title: "React.js study notes",
     notes: "React is a JS library that focuses on building single-page applications through component based architecture and updating a virtual copy of the DOM",
     tags: ["Javascript", "React", "Frontend"],
+    difficulty: "Easy",
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
   }
   const prep2 = {
     id: 2,
-    type: "question",
+    type: "Question",
     title: "What is useState() in React?",
     notes: "The useState() is a built in React hook that allows state variables to be used across multiple decoupled components, being updated and manipulated by these components",
     tags: ["Javascript", "React", "Frontend"],
@@ -79,7 +79,7 @@ function App() {
 }, []);
 
   //Returns the Dashboard view passing the jobs and prepItems state variable arrays
-  return <Dashboard jobs={jobs} prepItems={prepItems}/>
+  return <Dashboard jobs={jobs} setJobs = {setJobs} prepItems={prepItems} setPrepItems={setPrepItems}/>
 }
 
 

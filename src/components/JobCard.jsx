@@ -24,7 +24,7 @@ function JobCard({job}) {
     }
     return (
         <Card className='h-100'>
-            <Card.Header className='d-flex justify-content-between align-items-center'>Job Application<h5><Badge bg={status}>{job.status}</Badge></h5></Card.Header>
+            <Card.Header className='d-flex justify-content-between align-items-center'>Job Application<h5 className='my-auto'><Badge bg={status}>{job.status}</Badge></h5></Card.Header>
             
             <Card.Body>
                 

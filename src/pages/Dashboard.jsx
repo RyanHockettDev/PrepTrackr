@@ -1,6 +1,7 @@
 import React from 'react';
 import { Container, Row, Col, Card, Button, Navbar, Nav, ListGroup } from 'react-bootstrap';
 import JobCard from '../components/JobCard'
+import PrepCard from '../components/PrepCard'
 
 
 
@@ -9,6 +10,7 @@ import JobCard from '../components/JobCard'
 
 function Dashboard({jobs, prepItems}) {
     const job = jobs.length > 0 ? jobs[0] : null;
+    const prepItem = prepItems.length > 0 ? prepItems[0] : null;
   return (
     <Container className="mt-4 fullPage">
       <Navbar expand="lg" className="border-bottom">
@@ -37,17 +39,7 @@ function Dashboard({jobs, prepItems}) {
         <Col md={4} className="my-4 d-flex flex-column border-bottom">
         <Button className='my-4 greenBg'>Add New Prep Item</Button>
         <div className='bold my-2 mx-auto'>Most recently updated Prep Item:</div>
-          <Card className='h-100'>
-            <Card.Header>Lastest Interview Prep</Card.Header>
-            <Card.Body>
-              <Card.Title className='border-bottom py-2'>Subject: React.js</Card.Title>
-              <ListGroup>
-                <ListGroup.Item></ListGroup.Item>
-                <ListGroup.Item></ListGroup.Item>
-                <ListGroup.Item></ListGroup.Item>
-              </ListGroup>
-            </Card.Body>
-          </Card>
+          {prepItem && <PrepCard prepItem={prepItem} />}
           <Button className='tealBg my-4'>See All Prep Items</Button>
         </Col>
       </Row>
