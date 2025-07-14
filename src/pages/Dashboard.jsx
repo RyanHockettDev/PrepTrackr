@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import React from 'react';
 import { Container, Row, Col, Button, Navbar, Nav, Card } from 'react-bootstrap';
-
+import { Link } from 'react-router-dom';
 import JobFormModal from '../components/JobFormModal';
 import PrepFormModal from '../components/PrepFormModal';
 import JobCard from '../components/JobCard';
@@ -11,19 +11,15 @@ import PrepCard from '../components/PrepCard';
 
 
 
-function Dashboard({}) {
+function Dashboard({jobs, setJobs, prepItems, setPrepItems, showJobModal, setShowJobModal, showPrepModal, setShowPrepModal, selectedJob, setSelectedJob, setSelectedPrepItem, selectedPrepItem}) {
     //Checking for empty jobs and prepItems state values, then setting variable to first item in array (sorted in app.jsx, or on save) to fill single dashboard cards 
-    const [jobs, setJobs] = useState ([]);
-    const [prepItems, setPrepItems] = useState([]);
+    
     const recentJob = jobs && jobs.length > 0 ? jobs[0] : null;
     const recentPrepItem = prepItems.length > 0 ? prepItems[0] : null;
     
 
     // Setting state values for toggling the modal popover and selected job (null by default for adding a job, entire job  object if updating a job)
-    const [showJobModal, setShowJobModal] = useState(false);
-    const [selectedJob, setSelectedJob] = useState(null);
-    const [showPrepModal, setShowPrepModal] = useState(false);
-    const [selectedPrepItem, setSelectedPrepItem] = useState(null)
+    
 
 
     // Handlers for the job modal actions
@@ -59,7 +55,7 @@ function Dashboard({}) {
         setShowJobModal(false);
     }
 
-    // Handles for the prep item modal actions
+    // Handlers for the prep item modal actions
 
     const handleAddPrepItemClick = () => {
         //clears selected PrepItem state value if a PrepItem has previously been edited
@@ -99,7 +95,7 @@ function Dashboard({}) {
     <Container className="mt-4 fullPage">
       <Navbar expand="lg" className="border-bottom border-dark">
         <Container>
-            <Navbar.Brand href="/" className='brand'>PrepTrackr</Navbar.Brand>
+            <Nav.Link as={Link} to="/dash"><Navbar.Brand className='brand'>PrepTrackr</Navbar.Brand></Nav.Link>
             <Nav>
             <Navbar.Brand>Username</Navbar.Brand>
             <Nav.Link href="/me">
@@ -123,7 +119,7 @@ function Dashboard({}) {
             <Card.Footer></Card.Footer>
           </Card>
           }
-        <Button className='tealBg my-4'>See All Jobs</Button>
+        <Link to='/jobs'><Button className='tealBg my-4 w-100'>See All Jobs</Button></Link>
         </Col>
 
         {/* Latest Interview Prep */}
@@ -139,7 +135,7 @@ function Dashboard({}) {
             <Card.Footer></Card.Footer>
           </Card>
           }
-          <Button className='tealBg my-4'>See All Prep Items</Button>
+          <Link to='/prep'><Button className='tealBg my-4 w-100'>See All Prep Items</Button></Link>
         </Col>
       </Row>
       <JobFormModal
