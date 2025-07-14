@@ -2,6 +2,7 @@
 
 body {
   font-family: 'Roboto', sans-serif;
+  background: #f3f3f3;
 }
 
 
@@ -25,4 +26,8 @@ body {
 .greenBg {
     background-color: #009c22;
     border:none;
+}
+
+.bold {
+    font-weight: bold;
 }
